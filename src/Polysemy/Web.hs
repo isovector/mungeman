@@ -30,6 +30,7 @@ runWeb config (Sem m) = withLowerToIO $ \lower _ -> do
     closeSession
     pure a
 
+
 following
     :: Member (Lift WD) r
     => Selector
