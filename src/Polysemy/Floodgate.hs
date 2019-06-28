@@ -34,15 +34,3 @@ runFloodgate = fmap snd . runState @[Any] [] . reinterpretH
         getInitialStateT
   )
 
-
-test :: IO ()
-test = runM . runFloodgate $ do
-  hold $ sendM $ putStrLn "first1"
-  hold $ sendM $ putStrLn "first2"
-  sendM $ putStrLn "not held"
-  hold $ sendM $ putStrLn "second"
-  sendM $ putStrLn "not held again"
-  hold $ sendM $ putStrLn "third"
-  release
-  sendM $ putStrLn "finished"
-
