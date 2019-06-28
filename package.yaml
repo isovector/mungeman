@@ -23,10 +23,17 @@ dependencies:
 - base >= 4.7 && < 5
 - polysemy
 - polysemy-plugin
+- polysemy-zoo
 - webdriver
+- hedis
+- binary
+- bytestring
+- text
+- extra
 
 ghc-options:
-  -fplugin=Polysemy.Plugin
+  - -fplugin=Polysemy.Plugin
+  - -Wall
 
 default-extensions:
   - DataKinds

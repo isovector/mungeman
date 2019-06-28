@@ -19,6 +19,13 @@ packages:
   original:
     hackage: polysemy-plugin-0.2.1.0
 - completed:
+    hackage: polysemy-zoo-0.3.0.0@sha256:ea988ca3daecbc582c0ff740124b54142f99289972433c07219efe26bff69b2b,2773
+    pantry-tree:
+      size: 1321
+      sha256: 3c0607b70faf7dedacbd8c5672fdbf3dca0bb64d4bf47f60a00978d36d8c5631
+  original:
+    hackage: polysemy-zoo-0.3.0.0
+- completed:
     hackage: first-class-families-0.5.0.0@sha256:6e1488c502d5b1e780739a53edab65a307c6bf94d4232fab70e696e87f0fa087,1290
     pantry-tree:
       size: 847
