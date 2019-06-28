@@ -15,7 +15,6 @@ import           Polysemy.Error
 import           Polysemy.Input
 import           Polysemy.KVStore
 import           Polysemy.Output
-import           Polysemy.RedisUtils
 
 newtype MissingCustomer = MissingCustomer CustomerKey
 
@@ -46,7 +45,7 @@ buildEmailFromDigest (Digest ck ps) = do
 
   let content = "New content:\n" <> mconcat (fmap mkPost ps)
 
-  hoistError $
+  fromEither $
     hailgunMessage
       (mkSubject now)
       (TextOnly content)
@@ -69,5 +68,5 @@ sendDigests
 sendDigests ctx = interpret $ \case
   Output d -> do
     e <- buildEmailFromDigest d
-    void $ sendMError $ sendEmail ctx e
+    void $ fromEitherM $ sendEmail ctx e
 
