@@ -30,6 +30,7 @@ dependencies:
 - bytestring
 - text
 - extra
+- containers
 
 ghc-options:
   - -fplugin=Polysemy.Plugin
