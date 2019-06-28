@@ -9,6 +9,12 @@ import Data.Binary
 import GHC.Generics
 import Data.Text (Text)
 import GHC.Exts
+import Data.ByteString (ByteString)
+
+data Digest = Digest
+  { dCustomer :: CustomerKey
+  , dPosts :: [Post]
+  }
 
 newtype CustomerKey = CustomerKey
   { getCustomerKey :: String
@@ -16,6 +22,13 @@ newtype CustomerKey = CustomerKey
   deriving (Eq, Ord, Show, Generic)
   deriving newtype IsString
   deriving anyclass Binary
+
+data Customer = Customer
+  { cVersion :: Int
+  , cKey :: CustomerKey
+  , cEmails :: [ByteString]
+  }
+  deriving (Eq, Ord, Show, Generic, Binary)
 
 data BookmarkSource = Facebook
   deriving (Eq, Ord, Show, Enum, Bounded, Generic, Binary)

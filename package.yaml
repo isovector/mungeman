@@ -32,6 +32,9 @@ dependencies:
 - extra
 - containers
 - ghc-prim
+- hailgun
+- time
+- string-conv
 
 ghc-options:
   - -fplugin=Polysemy.Plugin

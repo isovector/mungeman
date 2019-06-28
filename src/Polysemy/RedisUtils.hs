@@ -12,11 +12,22 @@ import qualified Data.ByteString.Lazy.Char8 as L
 import           GHC.Exts
 import           Polysemy
 import           Polysemy.Error
+import           Polysemy.KVStore
 
 
 newtype Path = Path { getPath :: ByteString }
   deriving (Eq, Ord, Show, IsString)
 
+
+lookupOrThrowKV
+    :: Members '[ KVStore k v
+                , Error e
+                ] r
+    => (k -> e)
+    -> k
+    -> Sem r v
+lookupOrThrowKV f k =
+  hoistError . maybe (Left $ f k) Right =<< lookupKV k
 
 -- TODO(sandy): base lib
 hoistError
