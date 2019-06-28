@@ -9,21 +9,20 @@ import Polysemy.State
 import Unsafe.Coerce
 
 data Floodgate m a where
-  Hold :: m () -> Floodgate m ()
+  Hold    :: m () -> Floodgate m ()
   Release :: Floodgate m ()
 
 makeSem ''Floodgate
 
 
 runFloodgate
-    :: forall r a
-     . Sem (Floodgate ': r) a
+    :: Sem (Floodgate ': r) a
     -> Sem r a
 runFloodgate = fmap snd . runState @[Any] [] . reinterpretH
   ( \case
       Hold m -> do
         m' <- fmap void $ runT m
-        -- These Anys are here because the monadic action references 'r', and
+        -- These 'Any's are here because the monadic action references 'r', and
         -- if we exposed that, 'r' would be an infinite type
         modify (unsafeCoerce @_ @Any (raise $ runFloodgate m') :)
         getInitialStateT
@@ -33,4 +32,13 @@ runFloodgate = fmap snd . runState @[Any] [] . reinterpretH
         sequence_ ms'
         getInitialStateT
   )
+
+
+------------------------------------------------------------------------------
+-- | Like 'runFloodgate', but will do a final flush to 'release' anything that
+-- might still be behind the floodgate.
+runFloodgateDry
+    :: Sem (Floodgate ': r) a
+    -> Sem r a
+runFloodgateDry m = runFloodgate $ m <* release
 

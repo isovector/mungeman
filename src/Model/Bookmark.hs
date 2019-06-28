@@ -10,6 +10,13 @@ import GHC.Generics
 import Data.Text (Text)
 import GHC.Exts
 
+newtype CustomerKey = CustomerKey
+  { getCustomerKey :: String
+  }
+  deriving (Eq, Ord, Show, Generic)
+  deriving newtype IsString
+  deriving anyclass Binary
+
 data BookmarkSource = Facebook
   deriving (Eq, Ord, Show, Enum, Bounded, Generic, Binary)
 
