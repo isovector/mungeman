@@ -18,8 +18,10 @@ import           Polysemy.Output
 
 newtype MissingCustomer = MissingCustomer CustomerKey
 
+
 mkSubject :: Day -> Text
 mkSubject day = T.pack $ "Mungeman Digest for " ++ show day
+
 
 mkPost :: Post -> ByteString
 mkPost p = toS $ unlines
@@ -30,6 +32,7 @@ mkPost p = toS $ unlines
   , ""
   , ""
   ]
+
 
 buildEmailFromDigest
     :: Members '[ Error HailgunErrorMessage
