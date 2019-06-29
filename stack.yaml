@@ -4,6 +4,10 @@ packages:
 - .
 - ../polysemy-zoo
 
+flags:
+  polysemy:
+    error-messages: false
+
 extra-deps:
   - polysemy-0.5.1.0
   - polysemy-plugin-0.2.1.0

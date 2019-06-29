@@ -21,9 +21,9 @@ import Polysemy.State
 newtype SendEvent = SendEvent CustomerKey
 
 pubSub
-    :: Members '[ KVStore CustomerKey [Post]
-                , SetStore CustomerKey BookmarkKey
+    :: Members '[ SetStore CustomerKey BookmarkKey
                 , State [CustomerKey]
+                , KVStore CustomerKey [Post]
                 , Output Digest
                 ] r
     => Sem (Output Post ': Output SendEvent ': r) a
@@ -76,6 +76,7 @@ emitDigests = interpret $ \case
     mps <- lookupKV ck
     let ps = join $ maybeToList mps
     output $ Digest ck ps
+    deleteKV ck
 
 
 routeSubscriptions

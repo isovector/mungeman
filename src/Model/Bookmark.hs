@@ -15,6 +15,7 @@ data Digest = Digest
   { dCustomer :: CustomerKey
   , dPosts :: [Post]
   }
+  deriving (Eq, Ord, Show)
 
 newtype CustomerKey = CustomerKey
   { getCustomerKey :: String
