@@ -4,6 +4,7 @@ module Mail where
 
 import           Control.Monad
 import           Data.ByteString (ByteString)
+import           Data.Function
 import           Data.String.Conv (toS)
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -15,6 +16,7 @@ import           Polysemy.Error
 import           Polysemy.Input
 import           Polysemy.KVStore
 import           Polysemy.Output
+import           Polysemy.Warning
 
 newtype MissingCustomer = MissingCustomer CustomerKey
   deriving Show
@@ -33,6 +35,17 @@ mkPost p = toS $ unlines
   , ""
   , ""
   ]
+
+
+unsafeHailgunMessage
+    :: MessageSubject
+    -> MessageContent
+    -> UnverifiedEmailAddress
+    -> MessageRecipients
+    -> [Attachment]
+    -> HailgunMessage
+unsafeHailgunMessage a b c d e
+  = either (error . show) id $ hailgunMessage a b c d e
 
 
 buildEmailFromDigest
@@ -78,4 +91,26 @@ getCurrentDay :: IO Day
 getCurrentDay = do
     t <- getZonedTime
     return $ localDay (zonedTimeToLocalTime t)
+
+
+reportError
+    :: ( Member (Lift IO) r
+       )
+    => HailgunContext
+    -> UnverifiedEmailAddress
+    -> Sem (Warning ': r) ()
+    -> Sem r ()
+reportError ctx email m
+  = m
+  & interpret (
+      \case
+        EmitWarning w msg -> do
+          void $ sendM $ sendEmail ctx $
+            unsafeHailgunMessage
+              (toS $ show w)
+              (TextOnly $ toS msg)
+              "mungeman+error@reasonablypolymorphic.com"
+              emptyMessageRecipients { recipientsTo = [email] }
+              []
+    )
 

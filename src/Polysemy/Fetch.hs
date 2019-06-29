@@ -31,6 +31,8 @@ dropSentinel sent as
 dropSentinel sent (a : as) = a : dropSentinel sent as
 
 
+------------------------------------------------------------------------------
+-- | maybe we can just use '.gu'
 runFetchAsWD
     :: Member (Lift WD) r
     => Sem (Fetch ': r) a
@@ -46,7 +48,7 @@ runFetchAsWD = interpret $ \case
 
   FetchPost bKey key@(PostKey url) -> do
     sendM $ openPage url
-    story  <- fmap (take 1) $ sendM $ findElems $ ByCSS "#m_story_permalink_view"
+    story  <- fmap (take 1) $ sendM $ findElems $ ByCSS "#m_story_permalink_view .bx"
     timeEl <- sendM $ findElem $ ByCSS "abbr"
     text <- sendM $ traverse getText story
     time <- sendM $ getText timeEl
