@@ -46,11 +46,11 @@ runFetchAsWD = interpret $ \case
 
   FetchPost bKey key@(PostKey url) -> do
     sendM $ openPage url
-    story  <- sendM $ findElem $ ByCSS "#m_story_permalink_view"
+    story  <- fmap (take 1) $ sendM $ findElems $ ByCSS "#m_story_permalink_view"
     timeEl <- sendM $ findElem $ ByCSS "abbr"
-    text <- sendM $ getText story
+    text <- sendM $ traverse getText story
     time <- sendM $ getText timeEl
-    pure $ Post 0 key bKey time text
+    pure $ Post 0 key bKey time $ mconcat text
 
 
 runFetchAsKVStore

@@ -75,7 +75,7 @@ emitDigests = interpret $ \case
   Output (SendEvent ck) -> do
     mps <- lookupKV ck
     let ps = join $ maybeToList mps
-    output $ Digest ck ps
+    when (not $ null ps) $ output $ Digest ck ps
     deleteKV ck
 
 
@@ -100,3 +100,4 @@ bucketOutput
     -> Sem r a
 bucketOutput = interpret $ \case
   Output (k, o) -> modifyKV [] (o :) k
+

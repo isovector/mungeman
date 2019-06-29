@@ -17,6 +17,7 @@ import           Polysemy.KVStore
 import           Polysemy.Output
 
 newtype MissingCustomer = MissingCustomer CustomerKey
+  deriving Show
 
 
 mkSubject :: Day -> Text
@@ -72,4 +73,9 @@ sendDigests ctx = interpret $ \case
   Output d -> do
     e <- buildEmailFromDigest d
     void $ fromEitherM $ sendEmail ctx e
+
+getCurrentDay :: IO Day
+getCurrentDay = do
+    t <- getZonedTime
+    return $ localDay (zonedTimeToLocalTime t)
 
