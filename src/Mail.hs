@@ -93,14 +93,14 @@ getCurrentDay = do
     return $ localDay (zonedTimeToLocalTime t)
 
 
-reportError
+reportWarning
     :: ( Member (Lift IO) r
        )
     => HailgunContext
     -> UnverifiedEmailAddress
     -> Sem (Warning ': r) ()
     -> Sem r ()
-reportError ctx email m
+reportWarning ctx email m
   = m
   & interpret (
       \case
@@ -109,7 +109,7 @@ reportError ctx email m
             unsafeHailgunMessage
               (toS $ show w)
               (TextOnly $ toS msg)
-              "mungeman+error@reasonablypolymorphic.com"
+              "sandy@sandymaguire.me"
               emptyMessageRecipients { recipientsTo = [email] }
               []
     )
